@@ -131,6 +131,228 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  
+  # ------------------- AUTHENTICATION TAG -------------------
+  /auth/pre/send-otp:
+    post:
+      tags: [Authentication]
+      summary: Send OTP to email during registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: test@example.com
+      responses:
+        '200':
+          description: OTP sent successfully
+        '400':
+          description: Email already exists. Try login
+
+  /auth/pre/change-email:
+    post:
+      tags: [Authentication]
+      summary: Change registration email and resend OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: OTP sent successfully
+        '400':
+          description: Email already exists. Try login
+
+  /auth/pre/resend-otp:
+    post:
+      tags: [Authentication]
+      summary: Resend OTP code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: OTP resent successfully
+
+  /auth/register/template:
+    get:
+      tags: [Authentication]
+      summary: Get registration template (gender options)
+      responses:
+        '200':
+          description: Template data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  genderOptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register a new user (pending approval)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fullName, dateOfBirth, genderId, email]
+              properties:
+                fullName:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+                genderId:
+                  type: integer
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: User registered (pending approval)
+        '400':
+          description: Email already exists
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login with username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fullName: { type: string }
+                  dateOfBirth: { type: string, format: date }
+                  genderId: { type: integer }
+                  email: { type: string }
+                  accessToken: { type: string }
+                  refreshToken: { type: string }
+        '401':
+          description: Invalid username or password
+
+  /auth/verify:
+    post:
+      tags: [Authentication]
+      summary: Verify user email
+      parameters:
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+            format: email
+      requestBody:
+        required: false
+        content:
+          application/json: {}
+      responses:
+        '200':
+          description: User verified successfully
+
+  # ------------------- USER TAG -------------------
+  /user/change-password:
+    patch:
+      tags: [User]
+      summary: Change user password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+      responses:
+        '200':
+          description: Password updated successfully
+
+  /user/set-pin:
+    patch:
+      tags: [User]
+      summary: Set 6-digit user PIN
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPin:
+                  type: integer
+                  example: 123456
+      responses:
+        '200':
+          description: PIN set successfully
+
+  /user/me:
+    get:
+      tags: [User]
+      summary: Get current user info
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  fullName: { type: string }
+                  dateOfBirth: { type: string, format: date }
+                  genderId: { type: integer }
+                  email: { type: string }
+                  accessToken: { type: string }
+                  refreshToken: { type: string }
 
 components:
   schemas:
@@ -274,3 +496,9 @@ components:
         message:
           type: string
           example: Forbidden
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
