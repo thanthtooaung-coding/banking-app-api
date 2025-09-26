@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: Organization Service API
-  description: REST API for managing organizations, backed by gRPC `OrganizationService`.
+  title: Banking Application API
+  description: REST API for One Project One Month Banking Application.
   version: 1.0.0
 servers:
   - url: /api/v1
@@ -137,6 +137,7 @@ paths:
     post:
       tags: [Authentication]
       summary: Send OTP to email during registration
+      operationId: sendOtpForRegistration
       requestBody:
         required: true
         content:
@@ -158,6 +159,7 @@ paths:
     post:
       tags: [Authentication]
       summary: Change registration email and resend OTP
+      operationId: changeRegistrationEmail
       requestBody:
         required: true
         content:
@@ -178,6 +180,7 @@ paths:
     post:
       tags: [Authentication]
       summary: Resend OTP code
+      operationId: resendOtp
       requestBody:
         required: true
         content:
@@ -196,6 +199,7 @@ paths:
     get:
       tags: [Authentication]
       summary: Get registration template (gender options)
+      operationId: getRegistrationTemplate
       responses:
         '200':
           description: Template data
@@ -218,6 +222,7 @@ paths:
     post:
       tags: [Authentication]
       summary: Register a new user (pending approval)
+      operationId: registerUser
       requestBody:
         required: true
         content:
@@ -246,6 +251,7 @@ paths:
     post:
       tags: [Authentication]
       summary: Login with username and password
+      operationId: loginUser
       requestBody:
         required: true
         content:
@@ -278,6 +284,7 @@ paths:
     post:
       tags: [Authentication]
       summary: Verify user email
+      operationId: verifyUserEmail
       parameters:
         - in: query
           name: email
@@ -298,6 +305,7 @@ paths:
     patch:
       tags: [User]
       summary: Change user password
+      operationId: changeUserPassword
       security:
         - bearerAuth: []
       requestBody:
@@ -317,6 +325,7 @@ paths:
     patch:
       tags: [User]
       summary: Set 6-digit user PIN
+      operationId: setUserPin
       security:
         - bearerAuth: []
       requestBody:
@@ -337,6 +346,7 @@ paths:
     get:
       tags: [User]
       summary: Get current user info
+      operationId: getCurrentUser
       security:
         - bearerAuth: []
       responses:
