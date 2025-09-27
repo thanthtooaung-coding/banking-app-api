@@ -790,6 +790,172 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  # ------------------- DEPOSIT TRANSACTION TAG -------------------
+  /deposit/template:
+    get:
+      tags: [Deposit Transaction]
+      summary: Get deposit template data (e.g., account types)
+      operationId: getDepositTemplate
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Template data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Template data retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      accountTypeOptions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: Savings Account
+  /deposit:
+    post:
+      tags: [Deposit Transaction]
+      summary: Create a new manual deposit transaction
+      operationId: createDeposit
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDepositRequestDto'
+      responses:
+        '200':
+          description: Deposit transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseDeposit'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags: [Deposit Transaction]
+      summary: Get all deposit transactions
+      operationId: getAllDeposits
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of deposit transactions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseDepositList'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /deposit/{id}:
+    get:
+      tags: [Deposit Transaction]
+      summary: Get a deposit transaction by ID
+      operationId: getDeposit
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Deposit transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseDeposit'
+        '404':
+          description: Deposit transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Deposit Transaction]
+      summary: Update an existing deposit transaction
+      operationId: updateDeposit
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDepositRequestDto'
+      responses:
+        '200':
+          description: Updated deposit transaction details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseDeposit'
+        '404':
+          description: Deposit transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Deposit Transaction]
+      summary: Delete a deposit transaction
+      operationId: deleteDeposit
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Deposit transaction deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseMessage'
+        '404':
+          description: Deposit transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
     # -------------------- REQUEST DTOs (User) --------------------
@@ -1103,6 +1269,122 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FaqResponseDto'
+        pagination:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+              example: 1
+            total:
+              type: integer
+              example: 60
+            pageSize:
+              type: integer
+              example: 10
+    # -------------------- REQUEST DTOs (Deposit) --------------------
+    CreateDepositRequestDto:
+      type: object
+      required: [accountTypeId, accountNumber, name, amount]
+      properties:
+        accountTypeId:
+          type: integer
+          example: 1
+        accountNumber:
+          type: string
+          example: "0123456789"
+        name:
+          type: string
+          example: "John Doe"
+        amount:
+          type: number
+          format: double
+          example: 150.75
+        note:
+          type: string
+          example: "Monthly savings deposit"
+    UpdateDepositRequestDto:
+      type: object
+      required: [accountTypeId, accountNumber, name, amount]
+      properties:
+        accountTypeId:
+          type: integer
+          example: 1
+        accountNumber:
+          type: string
+          example: "0123456789"
+        name:
+          type: string
+          example: "John Doe"
+        amount:
+          type: number
+          format: double
+          example: 200.00
+        note:
+          type: string
+          example: "Updated monthly savings deposit"
+    # -------------------- CORE DTO (Deposit) --------------------
+    DepositResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        accountType:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: Savings Account
+        accountNumber:
+          type: string
+          example: "0123456789"
+        name:
+          type: string
+          example: "John Doe"
+        amount:
+          type: number
+          format: double
+          example: 150.75
+        note:
+          type: string
+          example: "Monthly savings deposit"
+        createdAt:
+          type: string
+          format: date-time
+          example: '2025-09-28T10:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2025-09-28T11:00:00Z'
+    # -------------------- WRAPPER RESPONSES (Deposit) --------------------
+    SuccessResponseDeposit:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Deposit transaction retrieved successfully
+        data:
+          $ref: '#/components/schemas/DepositResponseDto'
+    SuccessResponseDepositList:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Deposit transactions retrieved successfully
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepositResponseDto'
         pagination:
           type: object
           properties:
