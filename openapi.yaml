@@ -154,6 +154,10 @@ paths:
           description: OTP sent successfully
         '400':
           description: Email already exists. Try login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /auth/pre/change-email:
     post:
@@ -175,6 +179,10 @@ paths:
           description: OTP sent successfully
         '400':
           description: Email already exists. Try login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /auth/pre/resend-otp:
     post:
@@ -246,6 +254,10 @@ paths:
           description: User registered (pending approval)
         '400':
           description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /auth/login:
     post:
@@ -279,6 +291,10 @@ paths:
                   refreshToken: { type: string }
         '401':
           description: Invalid username or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /auth/verify:
     post:
@@ -299,6 +315,12 @@ paths:
       responses:
         '200':
           description: User verified successfully
+        '400':
+          description: Invalid or expired verification code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   # ------------------- USER TAG -------------------
   /user/change-password:
@@ -320,6 +342,18 @@ paths:
       responses:
         '200':
           description: Password updated successfully
+        '400':
+          description: Invalid password format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized (missing/invalid token)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /user/set-pin:
     patch:
@@ -341,6 +375,18 @@ paths:
       responses:
         '200':
           description: PIN set successfully
+        '400':
+          description: Invalid PIN format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /user/me:
     get:
@@ -363,6 +409,12 @@ paths:
                   email: { type: string }
                   accessToken: { type: string }
                   refreshToken: { type: string }
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
 components:
   schemas:
