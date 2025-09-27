@@ -424,6 +424,74 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /users/change-status/template:
+    get:
+      tags: [User]
+      summary: Get user status options for changing status
+      operationId: getUserStatusTemplate
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Template data for user status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Template data retrieved successfully
+                  data:
+                    type: object
+                    properties:
+                      statusOptions:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: approved
+  /users/{id}/change-status:
+    patch:
+      tags: [User]
+      summary: Change a user's status (e.g., approve, reject)
+      operationId: changeUserStatus
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeUserStatusRequestDto'
+      responses:
+        '200':
+          description: User status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseUser'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   # ------------------- ORGANIZATION TAG -------------------
   /organizations:
     post:
@@ -791,6 +859,13 @@ components:
           type: string
           format: date-time
           example: '2025-09-26T11:00:00Z'
+    ChangeUserStatusRequestDto:
+      type: object
+      required: [statusId]
+      properties:
+        statusId:
+          type: integer
+          example: 1
     # -------------------- WRAPPER RESPONSES (User) --------------------
     SuccessResponseUser:
       type: object
