@@ -6,132 +6,6 @@ info:
 servers:
   - url: /api/v1
 paths:
-  /organizations:
-    post:
-      tags:
-      - Organization
-      summary: Create a new organization
-      operationId: createOrganization
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateOrganizationRequestDto'
-      responses:
-        '200':
-          description: Organization created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponseOrganization'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    get:
-      tags:
-        - Organization
-      summary: Get all organizations
-      operationId: getAllOrganizations
-      responses:
-        '200':
-          description: List of organizations
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponseOrganizationList'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /organizations/{id}:
-    get:
-      tags:
-        - Organization
-      summary: Get an organization by ID
-      operationId: getOrganization
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Organization details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponseOrganization'
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    put:
-      tags:
-        - Organization
-      summary: Update an existing organization
-      operationId: updateOrganization
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateOrganizationRequestDto'
-      responses:
-        '200':
-          description: Updated organization details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponseOrganization'
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    delete:
-      tags:
-        - Organization
-      summary: Delete an organization
-      operationId: deleteOrganization
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Organization deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponseMessage'
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  
   # ------------------- AUTHENTICATION TAG -------------------
   /auth/pre/send-otp:
     post:
@@ -415,10 +289,385 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /users:
+    post:
+      tags:
+      - User
+      summary: Create a new user
+      operationId: createUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequestDto'
+      responses:
+        '200':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseUser'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - User
+      summary: Get all users
+      operationId: getAllUsers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseUserList'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/{id}:
+    get:
+      tags:
+        - User
+      summary: Get a user by ID
+      operationId: getUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseUser'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - User
+      summary: Update an existing user
+      operationId: updateUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequestDto'
+      responses:
+        '200':
+          description: Updated user details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseUser'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - User
+      summary: Delete a user
+      operationId: deleteUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseMessage'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  # ------------------- ORGANIZATION TAG -------------------
+  /organizations:
+    post:
+      tags:
+      - Organization
+      summary: Create a new organization
+      operationId: createOrganization
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequestDto'
+      responses:
+        '200':
+          description: Organization created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseOrganization'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - Organization
+      summary: Get all organizations
+      operationId: getAllOrganizations
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseOrganizationList'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /organizations/{id}:
+    get:
+      tags:
+        - Organization
+      summary: Get an organization by ID
+      operationId: getOrganization
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Organization details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseOrganization'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Organization
+      summary: Update an existing organization
+      operationId: updateOrganization
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationRequestDto'
+      responses:
+        '200':
+          description: Updated organization details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseOrganization'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Organization
+      summary: Delete an organization
+      operationId: deleteOrganization
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Organization deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseMessage'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'  
 
 components:
   schemas:
-    # -------------------- REQUEST DTOs --------------------
+    # -------------------- REQUEST DTOs (User) --------------------
+    CreateUserRequestDto:
+      type: object
+      required: [fullName, dateOfBirth, genderId, email]
+      properties:
+        fullName:
+          type: string
+          example: John Doe
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1990-01-15'
+        genderId:
+          type: integer
+          example: 1
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+    UpdateUserRequestDto:
+      type: object
+      required: [fullName, dateOfBirth, genderId, email]
+      properties:
+        fullName:
+          type: string
+          example: Johnathan Doe
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1990-01-15'
+        genderId:
+          type: integer
+          example: 1
+        email:
+          type: string
+          format: email
+          example: johnathan.doe@example.com
+    # -------------------- CORE DTO (User) --------------------
+    UserResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 101
+        fullName:
+          type: string
+          example: John Doe
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1990-01-15'
+        genderId:
+          type: integer
+          example: 1
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        createdAt:
+          type: string
+          format: date-time
+          example: '2025-09-26T10:00:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2025-09-26T11:00:00Z'
+    # -------------------- WRAPPER RESPONSES (User) --------------------
+    SuccessResponseUser:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: User retrieved successfully
+        data:
+          $ref: '#/components/schemas/UserResponseDto'
+    SuccessResponseUserList:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Users retrieved successfully
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponseDto'
+        pagination:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+              example: 1
+            total:
+              type: integer
+              example: 100
+            pageSize:
+              type: integer
+              example: 10
+    # -------------------- REQUEST DTOs (Organization) --------------------
     CreateOrganizationRequestDto:
       type: object
       required: [name, shortcode, address, country, createdBy]
@@ -460,7 +709,7 @@ components:
           format: int64
           example: 2002
 
-    # -------------------- CORE DTO --------------------
+    # -------------------- CORE DTO (Organization) --------------------
     OrganizationResponseDto:
       type: object
       properties:
@@ -497,7 +746,7 @@ components:
           format: int64
           example: 2002
 
-    # -------------------- WRAPPER RESPONSES --------------------
+    # -------------------- WRAPPER RESPONSES (Organization) --------------------
     SuccessResponseOrganization:
       type: object
       properties:
